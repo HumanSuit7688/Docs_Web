@@ -6,7 +6,7 @@ from django.urls import reverse
 from .forms import Doc1_Form
 from .db_funcs import get_order_db, get_all_orders_db, create_order_db, delete_order_db
 from .microsoft_world import make_doc
-import os
+import os, datetime
 
 
 def doc1_page(request):
@@ -77,7 +77,11 @@ def make_doc_procces(request, order_type, order_id):
 
     make_doc(surname, name, patronymic, grade_c, grade_b)
 
-    file_path = os.path.join('new_docs', f"new_{surname}_{name}_03_12.docx")
+    date_now = datetime.date.today()
+    day = date_now.strftime('%d')
+    month = date_now.strftime('%m')
+
+    file_path = os.path.join('new_docs', f"new_{surname}_{name}_{day}_{month}.docx")
     response = FileResponse(open(file_path, 'rb'), as_attachment=True)
     return response
 
