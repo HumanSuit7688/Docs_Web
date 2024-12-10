@@ -1,10 +1,11 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse, FileResponse
 from django.urls import reverse
 from .forms import Doc1_Form
-from .db_funcs import get_order_db, get_all_orders_db, create_order_db, delete_order_db
+from .db_funcs import get_order_db, get_all_orders_db, create_order_db, delete_order_db, update_order_status
 from .microsoft_world import make_doc
 import os, datetime
 
@@ -34,7 +35,7 @@ def doc1_form_active(request):
 
     return render(request, 'order_success.html')
 
-
+@login_required
 def secretery(request):
     orders_list = get_all_orders_db()
     orders = ('<tr> <td><h4>№ Заявки</h4></td>\n'
@@ -65,14 +66,18 @@ def secretery(request):
         orders += order_tr
     body_orders = f'<table border="1", style="text-align: center;"> {orders} </table>'
 
+    print(request.user)
+
     return render(request, 'secretary.html', {"body_orders" : body_orders})
 
+
+@login_required
 def make_doc_procces(request, order_type, order_id):
     order = get_order_db(order_id)
     name = order.get('name')
     surname = order.get('surname')
     patronymic = order.get('patronymic')
-    grade_c = order.get('order_c')
+    grade_c = order.get('grade_c')
     grade_b = order.get('grade_b')
 
     make_doc(surname, name, patronymic, grade_c, grade_b)
@@ -83,8 +88,13 @@ def make_doc_procces(request, order_type, order_id):
 
     file_path = os.path.join('new_docs', f"new_{surname}_{name}_{day}_{month}.docx")
     response = FileResponse(open(file_path, 'rb'), as_attachment=True)
+
+    update_order_status(order_id)
+
     return response
 
+
+@login_required
 def delete_order(request, order_id):
     delete_order_db(order_id)
     return render(request, 'delete_order.html',

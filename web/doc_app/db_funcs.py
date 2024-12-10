@@ -47,3 +47,9 @@ def create_order_db(doc_type, surname, name, patronymic, grade_c, grade_b, email
 def delete_order_db(id):
     order = Order
     order.objects.get(id=id).delete()
+
+
+def update_order_status(id):
+    order = Order.objects.get(id=id)
+    order.status = True
+    order.save()

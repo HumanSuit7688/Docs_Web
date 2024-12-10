@@ -11,9 +11,9 @@ class Order(models.Model):
     status = models.BooleanField(default=0)
 
 
-class File(models.Model):
-    title = models.CharField(max_length=150)
-    file = models.FileField(upload_to='')
-
-    def __str__(self):
-        return self.title
+# class File(models.Model):
+#     title = models.CharField(max_length=150)
+#     file = models.FileField(upload_to='')
+#
+#     def __str__(self):
+#         return self.title

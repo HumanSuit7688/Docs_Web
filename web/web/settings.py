@@ -128,3 +128,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'secretary'
+LOGOUT_REDIRECT_URL = 'home'
+
+SITE_ID = 1
