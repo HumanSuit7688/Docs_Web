@@ -1,3 +1,4 @@
+from Tools.demo.mcast import receiver
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
@@ -8,6 +9,8 @@ from .forms import Doc1_Form
 from .db_funcs import get_order_db, get_all_orders_db, create_order_db, delete_order_db, update_order_status
 from .microsoft_world import make_doc
 import os, datetime
+from .models import Order, Student
+from .send_email import send_notification
 
 
 def doc1_page(request):
@@ -23,13 +26,18 @@ def doc1_form_active(request):
     grade_b = request.POST.get('Grade_b')
     email = request.POST.get('Email')
 
+    surname = surname.capitalize()
+    name = name.capitalize()
+    patronymic = patronymic.capitalize()
+
     print(surname, name, patronymic, grade_c, grade_b, email)
     print(os.listdir())
+
 
     create_order_db(doc_type=1, surname=surname, name=name, patronymic=patronymic, grade_c=grade_c, grade_b=grade_b, email=email)
 
 
-    # error_text = 'хуйня'
+    # error_text = 'ошибка'
     # redirect_order = reverse('home')
     # return render(request, "order_error.html", {"error_text": error_text, "href": redirect_order})
 
@@ -60,7 +68,7 @@ def secretery(request):
             href = f'<td><a href="secсretary/create_documentik/{order_type}/{order_id}">Принять</a></td>\n<td><a href="secсretary/delete_orderik/{order_id}">Отклонить</a></td> </tr>\n'
         else:
             order_status = 'Обработана'
-            href = ''
+            href = f'<td></td><td><a href="secсretary/delete_orderik/{order_id}">Удалить</a></td> </tr>\n'
         order_tr = f'<tr> <td>{order_id}</td>\n<td>{order_type}</td>\n<td>{order_surname}</td>\n<td>{order_name}</td>\n<td>{order_patronymic}</td>\n<td>{order_grade}</td>\n<td>{order_status}</td>\n'
         order_tr += href
         orders += order_tr
@@ -79,6 +87,7 @@ def make_doc_procces(request, order_type, order_id):
     patronymic = order.get('patronymic')
     grade_c = order.get('grade_c')
     grade_b = order.get('grade_b')
+    email = order.get('email')
 
     make_doc(surname, name, patronymic, grade_c, grade_b)
 
@@ -90,6 +99,8 @@ def make_doc_procces(request, order_type, order_id):
     response = FileResponse(open(file_path, 'rb'), as_attachment=True)
 
     update_order_status(order_id)
+
+    send_notification(email, name, surname)
 
     return response
 

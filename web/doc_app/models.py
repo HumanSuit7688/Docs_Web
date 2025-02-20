@@ -11,6 +11,9 @@ class Order(models.Model):
     status = models.BooleanField(default=0)
 
 
+class Student(models.Model):
+    fio = models.CharField(max_length=150)
+
 # class File(models.Model):
 #     title = models.CharField(max_length=150)
 #     file = models.FileField(upload_to='')

@@ -12,7 +12,7 @@ def declension(surname, name, patronymic):
 
     gender = detector.detect(firstname=name)
     if str(gender) == 'Gender.MALE':
-        print('пацан')
+        print('парень')
         name_dec = maker.make(NamePart.FIRSTNAME, Gender.MALE, Case.DATIVE, name)
         surname_dec = maker.make(NamePart.LASTNAME, Gender.MALE, Case.DATIVE, surname)
         patronymic_dec = maker.make(NamePart.MIDDLENAME, Gender.MALE, Case.DATIVE, patronymic)
@@ -34,7 +34,7 @@ def date_in_par2():
     year = date_now.strftime('%Y')
 
     month_name = {'01' : 'января', '02' : 'февраля', '03' : 'марта', '04' : 'апреля', '05' : 'мая', '06' : 'июня', '07' : 'июля', '08' : 'августа', '09' : 'сентября',
-                  '010' : 'октября', '11' : 'ноября', '12' : 'декабря', }
+                  '10' : 'октября', '11' : 'ноября', '12' : 'декабря', }
     month = month_name[month]
     text = f'«{day}» {month} {year}г.'
     return text
