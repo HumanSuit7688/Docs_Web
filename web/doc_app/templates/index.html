@@ -8,11 +8,13 @@
     <h1><p style="text-align: center;">Запрос справки в Лицее № 1</p></h1>
     <h3><p style="text-align: center;">{{ semi_title }}</p></h3>
     <form style="text-align: center;" method="POST" action="doc1/process/">
+
         {% csrf_token %}
-    <table style="text-align: center;">
+    <table align=center style="text-align: center;">
         {{ form.as_table }}<br />
-    </table>
+    </table> <br><br>
     <input type="submit" value="Отправить">
+
 </form>
 </body>
 </html>

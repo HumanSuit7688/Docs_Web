@@ -10,7 +10,11 @@ def declension(surname, name, patronymic):
     maker = PetrovichDeclinationMaker()
     detector = PetrovichGenderDetector()
 
-    gender = detector.detect(firstname=name)
+    try:
+        gender = detector.detect(firstname=name)
+    except:
+        if name == 'Семен' or name == 'Семён':
+            gender = 'Gender.MALE'
     if str(gender) == 'Gender.MALE':
         print('парень')
         name_dec = maker.make(NamePart.FIRSTNAME, Gender.MALE, Case.DATIVE, name)

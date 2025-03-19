@@ -63,16 +63,19 @@ def secretery(request):
         order_patronymic = i.get('patronymic')
         order_grade = str(i.get('grade_c')) + i.get('grade_b')
         order_status = i.get('status')
+        color = ''
         if order_status == False:
             order_status = 'Не обработана'
+            corol = '"background-color: yellow;"'
             href = f'<td><a href="secсretary/create_documentik/{order_type}/{order_id}">Принять</a></td>\n<td><a href="secсretary/delete_orderik/{order_id}">Отклонить</a></td> </tr>\n'
         else:
             order_status = 'Обработана'
+            corol = '"background-color: green;"'
             href = f'<td></td><td><a href="secсretary/delete_orderik/{order_id}">Удалить</a></td> </tr>\n'
         order_tr = f'<tr> <td>{order_id}</td>\n<td>{order_type}</td>\n<td>{order_surname}</td>\n<td>{order_name}</td>\n<td>{order_patronymic}</td>\n<td>{order_grade}</td>\n<td>{order_status}</td>\n'
         order_tr += href
         orders += order_tr
-    body_orders = f'<table border="1", style="text-align: center;"> {orders} </table>'
+    body_orders = f'<table align=center border="1", style="text-align: center;"> {orders} </table>'
 
     print(request.user)
 
@@ -100,7 +103,7 @@ def make_doc_procces(request, order_type, order_id):
 
     update_order_status(order_id)
 
-    send_notification(email, name, surname)
+    # send_notification(email, name, surname)
 
     return response
 
