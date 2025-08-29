@@ -1,5 +1,5 @@
 from contextlib import nullcontext
-from .models import Order
+from .models import Order, Student
 
 
 def get_order_db(id):
@@ -53,3 +53,31 @@ def update_order_status(id):
     order = Order.objects.get(id=id)
     order.status = True
     order.save()
+
+
+def get_all_students(var):
+    students_db = Student.objects.all()
+    if var == 'dict':
+        students_dict = {}
+        for i in students_db:
+            students_dict[i.id] = i.fio
+
+        return students_dict
+
+    elif var == 'list':
+        students_list = []
+        for i in students_db:
+            students_list.append(i.fio)
+
+        return students_list
+
+def chek_student(surname, name):
+    state = False
+    students = get_all_students('list')
+    fio = surname + ' ' + name
+    for student in students:
+        if fio in student:
+            state = True
+            break
+
+    return state

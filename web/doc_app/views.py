@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, FileResponse
 from django.urls import reverse
 from .forms import Doc1_Form
-from .db_funcs import get_order_db, get_all_orders_db, create_order_db, delete_order_db, update_order_status
+from .db_funcs import get_order_db, get_all_orders_db, create_order_db, delete_order_db, update_order_status, chek_student, get_all_students
 from .microsoft_world import make_doc
 import os, datetime
 from .models import Order, Student
@@ -33,28 +33,42 @@ def doc1_form_active(request):
     print(surname, name, patronymic, grade_c, grade_b, email)
     print(os.listdir())
 
-
-    create_order_db(doc_type=1, surname=surname, name=name, patronymic=patronymic, grade_c=grade_c, grade_b=grade_b, email=email)
+    check = chek_student(surname, name)
+    print(check)
 
 
     # error_text = 'ошибка'
     # redirect_order = reverse('home')
     # return render(request, "order_error.html", {"error_text": error_text, "href": redirect_order})
 
-    return render(request, 'order_success.html')
+
+    if check == True:
+        create_order_db(doc_type=1, surname=surname, name=name, patronymic=patronymic, grade_c=grade_c, grade_b=grade_b, email=email)
+        return render(request, 'order_success.html')
+    else:
+        return render(request, 'order_error.html')
+
+
+
+
+
+
 
 @login_required
 def secretery(request):
     orders_list = get_all_orders_db()
-    orders = ('<tr> <td><h4>№ Заявки</h4></td>\n'
-              '<td><h4>Тип Справки</h4></td>\n'
-              '<td><h4>Фамилия</h4></td>\n'
-              '<td><h4>Имя</h4></td>\n'
-              '<td><h4>Отчество</h4></td>\n'
-              '<td><h4>Класс</h4></td>\n'
-              '<td><h4>Статус заявки</h4></td>\n'
-              '<td><h4>Действие</h4></td>\n'
-              '<td><h4>Действие</h4></td>\n </tr>')
+    # Заголовки таблицы
+    orders = ('<tr>'
+              '<th>№ Заявки</th>'
+              '<th>Тип Справки</th>'
+              '<th>Фамилия</th>'
+              '<th>Имя</th>'
+              '<th>Отчество</th>'
+              '<th>Класс</th>'
+              '<th>Статус заявки</th>'
+              '<th colspan="2">Действия</th>'
+              '</tr>')
+
     for i in orders_list:
         order_id = i.get('id')
         order_type = i.get('doc_type')
@@ -63,23 +77,44 @@ def secretery(request):
         order_patronymic = i.get('patronymic')
         order_grade = str(i.get('grade_c')) + i.get('grade_b')
         order_status = i.get('status')
-        color = ''
-        if order_status == False:
-            order_status = 'Не обработана'
-            corol = '"background-color: yellow;"'
-            href = f'<td><a href="secсretary/create_documentik/{order_type}/{order_id}">Принять</a></td>\n<td><a href="secсretary/delete_orderik/{order_id}">Отклонить</a></td> </tr>\n'
+
+        # если заявка ещё не обработана
+        if not order_status:
+            status_text = 'Не обработана'
+            href = (
+                f'<td><a class="btn-accept" href="/secсretary/create_documentik/{order_type}/{order_id}">Принять</a></td>'
+                f'<td>'
+                f'<button type="button" class="reject-btn" '
+                f'onclick="confirmAction(\'secсretary/delete_orderik/{order_id}\', '
+                f'\'Отклонить заявку №{order_id}?\')">Отклонить</button>'
+                f'</td>')
         else:
-            order_status = 'Обработана'
-            corol = '"background-color: green;"'
-            href = f'<td></td><td><a href="secсretary/delete_orderik/{order_id}">Удалить</a></td> </tr>\n'
-        order_tr = f'<tr> <td>{order_id}</td>\n<td>{order_type}</td>\n<td>{order_surname}</td>\n<td>{order_name}</td>\n<td>{order_patronymic}</td>\n<td>{order_grade}</td>\n<td>{order_status}</td>\n'
-        order_tr += href
+            status_text = 'Обработана'
+            href = (
+                f'<td>'
+                f'</td>'
+                f'<td>'
+                f'<button type="button" class="delete-btn" '
+                f'onclick="confirmAction(\'secсretary/delete_orderik/{order_id}\', '
+                f'\'Удалить заявку №{order_id}?\')">Удалить</button>'
+                f'</td>'
+            )
+
+        # строка таблицы
+        order_tr = (f'<tr>'
+                    f'<td>{order_id}</td>'
+                    f'<td>{order_type}</td>'
+                    f'<td>{order_surname}</td>'
+                    f'<td>{order_name}</td>'
+                    f'<td>{order_patronymic}</td>'
+                    f'<td>{order_grade}</td>'
+                    f'<td>{status_text}</td>'
+                    f'{href}')
+
         orders += order_tr
-    body_orders = f'<table align=center border="1", style="text-align: center;"> {orders} </table>'
 
-    print(request.user)
-
-    return render(request, 'secretary.html', {"body_orders" : body_orders})
+    body_orders = f'<table align="center">{orders}</table>'
+    return render(request, 'secretary.html', {"body_orders": body_orders})
 
 
 @login_required
@@ -93,7 +128,6 @@ def make_doc_procces(request, order_type, order_id):
     email = order.get('email')
 
     make_doc(surname, name, patronymic, grade_c, grade_b)
-
     date_now = datetime.date.today()
     day = date_now.strftime('%d')
     month = date_now.strftime('%m')
@@ -103,7 +137,7 @@ def make_doc_procces(request, order_type, order_id):
 
     update_order_status(order_id)
 
-    # send_notification(email, name, surname)
+    send_notification(email, name, surname)
 
     return response
 

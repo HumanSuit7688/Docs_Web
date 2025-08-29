@@ -12,6 +12,7 @@ class Order(models.Model):
 
 
 class Student(models.Model):
+    id = models.IntegerField(primary_key=True)
     fio = models.CharField(max_length=150)
 
 # class File(models.Model):

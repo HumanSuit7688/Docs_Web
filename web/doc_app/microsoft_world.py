@@ -64,7 +64,7 @@ def make_doc(surname, name, patronymic, grade_c, grade_b):
     surname = fio_dict.get('surname')
     patronymic = fio_dict.get('patronymic')
 
-    doc = docx.Document('web\doc_app\Pattern.docx')
+    doc = docx.Document('web/doc_app/Pattern.docx')
     style = doc.styles['Normal']
     style.font.name = 'Arial'
     style.font.size = Pt(12)

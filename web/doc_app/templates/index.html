@@ -1,20 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Запрос справки</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <h1><p style="text-align: center;">Запрос справки в Лицее № 1</p></h1>
-    <h3><p style="text-align: center;">{{ semi_title }}</p></h3>
-    <form style="text-align: center;" method="POST" action="doc1/process/">
+    <div class="container">
+        <h1>Форма для справки</h1>
+        <h2>{{ semi_title }}</h2>
+        <form method="post">
+            {% csrf_token %}
 
-        {% csrf_token %}
-    <table align=center style="text-align: center;">
-        {{ form.as_table }}<br />
-    </table> <br><br>
-    <input type="submit" value="Отправить">
+            <label for="id_Surname">Фамилия</label>
+            {{ form.Surname }}
 
-</form>
+            <label for="id_Name">Имя</label>
+            {{ form.Name }}
+
+            <label for="id_Patronymic">Отчество</label>
+            {{ form.Patronymic }}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_Grade_c">Класс (цифра)</label>
+                    {{ form.Grade_c }}
+                </div>
+                <div class="form-group">
+                    <label for="id_Grade_b">Класс (буква)</label>
+                    {{ form.Grade_b }}
+                </div>
+            </div>
+
+            <label for="id_Email">Электронная почта</label>
+            {{ form.Email }}
+
+            <input type="submit" value="Отправить">
+        </form>
+    </div>
 </body>
 </html>
