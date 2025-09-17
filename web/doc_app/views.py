@@ -82,7 +82,7 @@ def secretery(request):
         if not order_status:
             status_text = 'Не обработана'
             href = (
-                f'<td><a class="btn-accept" href="/secсretary/create_documentik/{order_type}/{order_id}">Принять</a></td>'
+                f'<td><a class="btn-accept" href="secсretary/create_documentik/{order_type}/{order_id}">Принять</a></td>'
                 f'<td>'
                 f'<button type="button" class="reject-btn" '
                 f'onclick="confirmAction(\'secсretary/delete_orderik/{order_id}\', '

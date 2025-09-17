@@ -7,7 +7,7 @@
     <div class="container">
         <h1>Форма для справки</h1>
         <h2>{{ semi_title }}</h2>
-        <form method="post">
+        <form method="POST" action="doc1/process/">
             {% csrf_token %}
 
             <label for="id_Surname">Фамилия</label>
