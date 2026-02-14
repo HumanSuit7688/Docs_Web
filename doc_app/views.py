@@ -36,21 +36,15 @@ def doc1_form_active(request):
     check = chek_student(surname, name)
     print(check)
 
-
     # error_text = 'ошибка'
     # redirect_order = reverse('home')
     # return render(request, "order_error.html", {"error_text": error_text, "href": redirect_order})
 
-
-    if check == True:
+    if check:
         create_order_db(doc_type=1, surname=surname, name=name, patronymic=patronymic, grade_c=grade_c, grade_b=grade_b, email=email)
         return render(request, 'order_success.html')
     else:
         return render(request, 'order_error.html')
-
-
-
-
 
 
 
