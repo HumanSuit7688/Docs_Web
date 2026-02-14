@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Запрос справки</title>
+</head>
+<body>
+    <h1><p style="text-align: center;">Запрос справки в Лицее № 1</p></h1>
+    <h3><p style="text-align: center;">{{ semi_title }}</p></h3>
+    <form style="text-align: center;" method="POST" action="doc1/process/">
+
+        {% csrf_token %}
+    <table align=center style="text-align: center;">
+        {{ form.as_table }}<br />
+    </table> <br><br>
+    <input type="submit" value="Отправить">
+
+</form>
+</body>
+</html>
+
+
+/////
+{% load static %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Запрос справки</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Форма для справки</h1>
+        <h2>{{ semi_title }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Отправить">
+        </form>
+    </div>
+</body>
+</html>
+
+////
