@@ -26,7 +26,7 @@ MEDIA_ROOT = BASE_DIR / 'new_docs'
 SECRET_KEY = 'django-insecure-5sj0x7ir$8%@s0pfy$%)sac4^%$c&r*vjg!^pv^qh=y6f7)r13'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
