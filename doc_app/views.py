@@ -1,4 +1,3 @@
-from Tools.demo.mcast import receiver
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
