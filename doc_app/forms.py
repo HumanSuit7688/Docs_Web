@@ -26,11 +26,3 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
-
-
-#     russian_letters_validator = RegexValidator(
-#         r'^[А-Яа-яЁёs]+$',  # Разрешаем только русские буквы и пробелы
-#         'Введите только русские буквы.'
-#     )
-
-# validators=[russian_letters_validator]

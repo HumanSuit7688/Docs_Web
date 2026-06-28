@@ -79,7 +79,3 @@ def make_doc(surname, name, patronymic, grade_c, grade_b):
     month = date_now.strftime('%m')
 
     doc.save(f'new_docs/new_{surname_name}_{name_name}_{day}_{month}.docx')
-
-# make_doc('Урбан', 'Иван', 'Борисович', 10, 'А')
-# print(declension('Урбан', 'Иван', 'Борисович'))
-
